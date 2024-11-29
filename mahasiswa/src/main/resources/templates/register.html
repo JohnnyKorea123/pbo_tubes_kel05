@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrasi Akun - Aplikasi Registrasi Mahasiswa</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h3>Registrasi Akun</h3>
+            </div>
+            <div class="card-body">
+              <form th:action="@{/register}" th:object="${user}" method="post">
+                <div class="form-group">
+                  <label for="username">Username:</label>
+                  <input type="text" id="username" th:field="*{username}" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label for="password">Password:</label>
+                  <input type="password" id="password" th:field="*{password}" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label for="role">Role:</label>
+                  <select id="role" th:field="*{role}" class="form-control">
+                    <option value="ADMIN">Admin</option>
+                    <option value="USER">User</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

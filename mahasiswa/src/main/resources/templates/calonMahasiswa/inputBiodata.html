@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Input Biodata - Aplikasi Registrasi Mahasiswa</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">Input Biodata</h1>
+      <form th:action="@{/calonMahasiswa/inputBiodata}" th:object="${calonMahasiswa}" method="post">
+        <div class="form-group">
+          <label for="nik">NIK:</label>
+          <input type="text" id="nik" th:field="*{nik}" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="nama">Nama:</label>
+          <input type="text" id="nama" th:field="*{nama}" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="notelp">No. Telp:</label>
+          <input type="text" id="notelp" th:field="*{notelp}" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="jurusanYangDiminati">Jurusan yang Diminati:</label>
+          <select id="jurusanYangDiminati" th:field="*{jurusanYangDiminati}" class="form-control" multiple>
+            <option th:each="jurusan : ${jurusanList}" th:value="${jurusan.namaJurusan}" th:text="${jurusan.namaJurusan}"></option>
+          </select>
+          <small class="form-text text-muted">Pilih maksimal 4 jurusan.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
