@@ -51,6 +51,8 @@ public class AdminController {
         return "admin/createJurusan";
     }
 
+    //test
+
     @PostMapping("/jurusan") 
     public String createJurusan(@ModelAttribute JurusanDTO jurusanDTO, Model model) { 
         if (jurusanService.existsByNama(jurusanDTO.getNamaJurusan())) { 
