@@ -11,8 +11,10 @@ import lombok.Setter;
 public class UserDTO {
     @NotBlank(message = "Username tidak boleh kosong")
     private String username;
+
     @NotBlank(message = "Password tidak boleh kosong")
     private String password;
+    
     private String role;
     // Getters and Setters
 }

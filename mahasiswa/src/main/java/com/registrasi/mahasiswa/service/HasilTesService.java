@@ -14,6 +14,8 @@ public class HasilTesService {
     @Autowired
     private HasilTesRepository hasilTesRepository;
 
+    
+
     public HasilTesDTO saveHasilTes(HasilTesDTO hasilTesDTO) {
         HasilTes hasilTes = convertToEntity(hasilTesDTO);
         hasilTes.setTotalNilai(hasilTes.getNilaiA() + hasilTes.getNilaiB() + hasilTes.getNilaiC());
@@ -30,6 +32,9 @@ public class HasilTesService {
         HasilTes hasilTes = hasilTesRepository.findByNik(nik);
         return convertToDTO(hasilTes);
     }
+
+    
+    public boolean existsByNik(String nik) { return hasilTesRepository.existsByNik(nik); }
 
     private HasilTesDTO convertToDTO(HasilTes hasilTes) {
         HasilTesDTO hasilTesDTO = new HasilTesDTO();

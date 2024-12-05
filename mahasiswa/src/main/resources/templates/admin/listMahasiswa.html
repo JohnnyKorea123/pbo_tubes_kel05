@@ -10,24 +10,42 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Daftar Mahasiswa</a>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/logout}">Logout</a>
-          </li>
-        </ul>
+        <ul class="navbar-nav ml-auto"></ul>
       </div>
     </nav>
     <div class="container mt-5">
-      <h2 class="mb-4">Daftar Mahasiswa</h2>
+      <h2 class="mb-4">Daftar Mahasiswa Yang Terdaftar</h2>
+      <!-- Form Pencarian -->
+      <form th:action="@{/admin/mahasiswa/cari}" method="get" class="mb-4">
+        <div class="form-row">
+          <div class="col">
+            <input type="text" name="jurusan" class="form-control" placeholder="Cari berdasarkan jurusan" />
+          </div>
+          <div class="col">
+            <select name="status" class="form-control">
+              <option value="">Semua Status</option>
+              <option value="lulus">Lulus</option>
+              <option value="tidak_lulus">Tidak Lulus</option>
+            </select>
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-primary">Cari</button>
+          </div>
+        </div>
+      </form>
       <table class="table table-bordered">
         <thead>
           <tr>
             <th>Nama Mahasiswa</th>
+            <th>Jurusan yang Diminati</th>
+            <th>Status Penerimaan</th>
           </tr>
         </thead>
         <tbody>
-          <tr th:each="user : ${userList}">
-            <td th:text="${user.username}">Nama Mahasiswa</td>
+          <tr th:each="mahasiswa : ${mahasiswaList}">
+            <td th:text="${mahasiswa.nama}">Nama Mahasiswa</td>
+            <td th:text="${mahasiswa.jurusanYangDiminati}">Jurusan yang Diminati</td>
+            <td th:text="${mahasiswa.statusPenerimaan}">Status Penerimaan</td>
           </tr>
         </tbody>
       </table>

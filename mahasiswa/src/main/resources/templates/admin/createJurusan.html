@@ -14,8 +14,10 @@
             <div class="mb-3">
               <label for="namaJurusan" class="form-label">Nama Jurusan:</label>
               <input type="text" id="namaJurusan" class="form-control" th:field="*{namaJurusan}" placeholder="Enter Jurusan Name" />
+              <div th:if="${#fields.hasErrors('namaJurusan')}" class="text-danger" th:errors="*{namaJurusan}"></div>
             </div>
             <button type="submit" class="btn btn-primary w-100">Create</button>
+            <div th:if="${error}" class="text-danger mt-3" th:text="${error}"></div>
           </form>
         </div>
       </div>

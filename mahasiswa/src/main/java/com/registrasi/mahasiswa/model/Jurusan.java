@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +18,10 @@ import lombok.Setter;
 public class Jurusan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
+
+    @NotBlank(message = "namaJurusan tidak boleh kosong")
     private String namaJurusan;
 
     @OneToMany(mappedBy = "jurusan")

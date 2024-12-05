@@ -8,6 +8,6 @@ import com.registrasi.mahasiswa.model.CalonMahasiswa;
 import com.registrasi.mahasiswa.model.User;
 
 public interface CalonMahasiswaRepository extends JpaRepository<CalonMahasiswa, Long> {
-    CalonMahasiswa findByNikAndNama(String nik, String nama);
+    CalonMahasiswa findByNik(String nik);
     CalonMahasiswa findByUser(User user);
 }

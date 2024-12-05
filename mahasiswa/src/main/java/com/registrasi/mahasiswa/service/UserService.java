@@ -29,4 +29,18 @@ public class UserService {
     public List<User> findByRole(String role) { 
         return userRepository.findByRole(role); 
     }
+
+
+    public User validateUser(String username, String password) {
+        // Cari pengguna berdasarkan username
+        User user = userRepository.findByUsername(username);
+
+        // Periksa apakah pengguna ditemukan dan password cocok
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+
+        // Jika tidak cocok, kembalikan null
+        return null;
+    }
 }

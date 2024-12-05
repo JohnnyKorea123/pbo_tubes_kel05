@@ -2,10 +2,13 @@ package com.registrasi.mahasiswa.model;
 
 
 
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,5 +27,6 @@ public class HasilTes {
     private int nilaiC;
     private int totalNilai;
 
-    // Getters and Setters
+    @OneToOne(mappedBy = "hasilTes")
+    private CalonMahasiswa calonMahasiswa;
 }

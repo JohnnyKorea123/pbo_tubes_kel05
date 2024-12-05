@@ -29,34 +29,33 @@
     </style>
   </head>
   <body>
-      <!-- Results Section -->
-      <div class="row justify-content-center mt-4" th:if="${calonMahasiswa != null}">
-        <div class="col-md-8">
-          <div class="card p-4">
-            <h4 class="mb-3 text-primary">Detail Hasil Test</h4>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <strong>NIK:</strong>
-                <span th:text="${calonMahasiswa.nik}"></span>
-              </li>
-              <li class="list-group-item">
-                <strong>Nama:</strong>
-                <span th:text="${calonMahasiswa.nama}"></span>
-              </li>
-              <li class="list-group-item">
-                <strong>Jurusan yang Diminati:</strong>
-                <span th:text="${calonMahasiswa.jurusanYangDiminati}"></span>
-              </li>
-              <li class="list-group-item">
-                <strong>Hasil Test:</strong>
-                <span th:text="${calonMahasiswa.hasilTest}"></span>
-              </li>
-              <li class="list-group-item">
-                <strong>Status Penerimaan:</strong>
-                <span th:text="${calonMahasiswa.statusPenerimaan}"></span>
-              </li>
-            </ul>
-          </div>
+    <!-- Results Section -->
+    <div class="row justify-content-center mt-4" th:if="${calonMahasiswa != null}">
+      <div class="col-md-8">
+        <div class="card p-4">
+          <h4 class="mb-3 text-primary">Detail Hasil Test</h4>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <strong>NIK:</strong>
+              <span th:text="${calonMahasiswa.nik}"></span>
+            </li>
+            <li class="list-group-item">
+              <strong>Nama:</strong>
+              <span th:text="${calonMahasiswa.nama}"></span>
+            </li>
+            <li class="list-group-item">
+              <strong>Jurusan yang Diminati:</strong>
+              <span th:text="${calonMahasiswa.jurusanYangDiminati}"></span>
+            </li>
+            <li class="list-group-item">
+              <strong>Total:</strong>
+              <span th:text="${calonMahasiswa.hasilTes.totalNilai}"></span>
+            </li>
+            <li class="list-group-item">
+              <strong>Status Penerimaan:</strong>
+              <span th:text="${calonMahasiswa.statusPenerimaan}"></span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +18,6 @@ public class CalonMahasiswa extends Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String jurusanYangDiminati;
-    private String hasilTest;
     private String statusPenerimaan;
 
     @ManyToOne
@@ -28,6 +28,12 @@ public class CalonMahasiswa extends Person {
     @JoinColumn(name = "jurusan_id")
     private Jurusan jurusan;
 
+    @OneToOne
+    @JoinColumn(name = "hasil_tes_id")
+    private HasilTes hasilTes;
+
+    
+    
 }
 
 

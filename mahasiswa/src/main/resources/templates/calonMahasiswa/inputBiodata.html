@@ -12,15 +12,15 @@
       <form th:action="@{/calonMahasiswa/inputBiodata}" th:object="${calonMahasiswa}" method="post">
         <div class="form-group">
           <label for="nik">NIK:</label>
-          <input type="text" id="nik" th:field="*{nik}" class="form-control" />
+          <input type="text" id="nik" th:field="*{nik}" class="form-control" required />
         </div>
         <div class="form-group">
           <label for="nama">Nama:</label>
-          <input type="text" id="nama" th:field="*{nama}" class="form-control" />
+          <input type="text" id="nama" th:field="*{nama}" class="form-control" required />
         </div>
         <div class="form-group">
           <label for="notelp">No. Telp:</label>
-          <input type="text" id="notelp" th:field="*{notelp}" class="form-control" />
+          <input type="text" id="notelp" th:field="*{notelp}" class="form-control" required />
         </div>
         <div class="form-group">
           <label for="jurusanYangDiminati">Jurusan yang Diminati:</label>

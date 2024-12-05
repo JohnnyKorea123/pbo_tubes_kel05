@@ -16,6 +16,7 @@ public class HasilTesDTO {
     private int nilaiB;
     private int nilaiC;
     private int totalNilai;
+    private String statusPenerimaan;
 
     // Getters and Setters
 }

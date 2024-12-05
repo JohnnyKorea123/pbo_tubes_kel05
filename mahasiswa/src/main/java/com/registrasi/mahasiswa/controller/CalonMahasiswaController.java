@@ -26,6 +26,8 @@ public class CalonMahasiswaController {
     @Autowired
     private JurusanService jurusanService;
 
+
+    // input biodata start
     @GetMapping("/inputBiodata")
     public String inputBiodataForm(Model model) {
         model.addAttribute("calonMahasiswa", new CalonMahasiswaDTO());
@@ -41,17 +43,8 @@ public class CalonMahasiswaController {
         return "redirect:/calonMahasiswa/dashboard";
     }
 
-    // @GetMapping("/dashboard")
-    // public String dashboard(HttpSession session, Model model) {
-    //     User user = (User) session.getAttribute("user");
-    //     CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
-    //     if (calonMahasiswa == null) {
-    //         return "redirect:/calonMahasiswa/inputBiodata";
-    //     }
-    //     model.addAttribute("calonMahasiswa", calonMahasiswa);
-    //     return "calonMahasiswa/dashboard";
-    // }
-
+    // input biodata ends
+    
     @GetMapping("/hasilTest")
     public String lihatHasilTest(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
@@ -60,8 +53,10 @@ public class CalonMahasiswaController {
             return "redirect:/calonMahasiswa/inputBiodata";
         }
         model.addAttribute("calonMahasiswa", calonMahasiswa);
+        System.out.println("Calon Mahasiswa: " + calonMahasiswa); // Tambahkan log ini
         return "calonMahasiswa/lihatHasilTest";
     }
+    
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, Model model) {

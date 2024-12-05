@@ -18,14 +18,12 @@
       <table class="table table-bordered table-striped table-hover">
         <thead class="table-dark">
           <tr class="text-center">
-            <th scope="col">ID</th>
             <th scope="col">Nama Jurusan</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr th:each="jurusan : ${jurusanList}">
-            <td th:text="${jurusan.id}" class="text-center">ID</td>
             <td th:text="${jurusan.namaJurusan}" class="text-center">Nama Jurusan</td>
             <td class="text-center">
               <a th:href="@{/admin/jurusan/update/{id}(id=${jurusan.id})}" class="btn btn-warning btn-sm me-1"> <i class="fas fa-edit"></i> Update </a>
