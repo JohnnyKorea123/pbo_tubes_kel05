@@ -22,4 +22,5 @@ public class JurusanDTO {
     private List<CalonMahasiswa> calonMahasiswaList;
     
     // Getters and Setters
+
 }

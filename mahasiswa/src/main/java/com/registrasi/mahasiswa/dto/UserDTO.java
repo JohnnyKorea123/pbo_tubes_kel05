@@ -19,7 +19,7 @@ public class UserDTO {
 
     private String role;
 
-    private String profilePicture;
+ 
 
     // Getters and Setters
 }
