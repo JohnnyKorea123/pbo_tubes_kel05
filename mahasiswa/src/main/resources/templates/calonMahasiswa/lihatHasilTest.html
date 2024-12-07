@@ -55,25 +55,6 @@
               <strong>Status Penerimaan:</strong>
               <span th:text="${calonMahasiswa.statusPenerimaan}"></span>
             </li>
-            <li class="list-group-item">
-              <a class="btn btn-primary" data-bs-toggle="collapse" href="#nilaiDetail" role="button" aria-expanded="false" aria-controls="nilaiDetail"> Lihat Detail Nilai </a>
-              <div class="collapse mt-3" id="nilaiDetail">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">
-                    <strong>Nilai A:</strong>
-                    <span th:text="${calonMahasiswa.hasilTes.nilaiA}"></span>
-                  </li>
-                  <li class="list-group-item">
-                    <strong>Nilai B:</strong>
-                    <span th:text="${calonMahasiswa.hasilTes.nilaiB}"></span>
-                  </li>
-                  <li class="list-group-item">
-                    <strong>Nilai C:</strong>
-                    <span th:text="${calonMahasiswa.hasilTes.nilaiC}"></span>
-                  </li>
-                </ul>
-              </div>
-            </li>
           </ul>
         </div>
       </div>

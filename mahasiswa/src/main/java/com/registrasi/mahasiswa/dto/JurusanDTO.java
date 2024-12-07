@@ -15,7 +15,7 @@ public class JurusanDTO {
     private Long id;
 
     @NotBlank(message = "Nama jurusan tidak boleh kosong")
-    @Size(min = 10, message = "Nama jurusan harus memiliki minimal 10 huruf")
+    @Size(min = 5, message = "Nama jurusan harus memiliki minimal 10 huruf")
     private String namaJurusan;
 
 
