@@ -1,5 +1,6 @@
 package com.registrasi.mahasiswa.controller;
 
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,19 +73,20 @@ public class LoginController {
         return "register";
     }
 
-   @PostMapping("/register")
+    @PostMapping("/register")
     public String register(@Valid @ModelAttribute UserDTO userDTO, BindingResult result, Model model) {
-    if (result.hasErrors()) {
-        return "register";
+        if (result.hasErrors()) {
+            return "register";
+        }
+        if (userRepository.findByUsername(userDTO.getUsername()) != null) {
+            model.addAttribute("message", "Username telah terdaftar");
+            return "register";
+        }
+        userService.saveUser(userDTO);
+        model.addAttribute("message", "Akun berhasil didaftarkan!");
+        return "registerSuccess";
     }
-    if (userRepository.findByUsername(userDTO.getUsername()) != null) {
-        model.addAttribute("message", "Username telah terdaftar");
-        return "register";
-    }
-    userService.saveUser(userDTO);
-    model.addAttribute("message", "Akun berhasil didaftarkan!");
-    return "registerSuccess";
-}
 
-
+    
+    
 }

@@ -18,7 +18,6 @@ import lombok.Setter;
 public class Jurusan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     @NotBlank(message = "namaJurusan tidak boleh kosong")
@@ -26,6 +25,4 @@ public class Jurusan {
 
     @OneToMany(mappedBy = "jurusan")
     private List<CalonMahasiswa> calonMahasiswaList;
-
-    // Getters and Setters
 }

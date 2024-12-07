@@ -1,4 +1,5 @@
 package com.registrasi.mahasiswa.controller;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.registrasi.mahasiswa.dto.CalonMahasiswaDTO;
 import com.registrasi.mahasiswa.dto.HasilTesDTO;
@@ -46,16 +49,16 @@ public class AdminController {
     public String listJurusan(Model model) {
     model.addAttribute("jurusanList", jurusanService.getAllJurusan());
     return "admin/listJurusan";
-}
+    }
 
-@GetMapping("/jurusan/create")
-public String createJurusanForm(Model model) {
+    @GetMapping("/jurusan/create")
+    public String createJurusanForm(Model model) {
     model.addAttribute("jurusan", new JurusanDTO());
     return "admin/createJurusan";
-}
+    }
 
-@PostMapping("/jurusan")
-public String createJurusan(@Valid @ModelAttribute JurusanDTO jurusanDTO, BindingResult bindingResult, Model model) {
+    @PostMapping("/jurusan")
+    public String createJurusan(@Valid @ModelAttribute JurusanDTO jurusanDTO, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
         return "admin/createJurusan";
     }
@@ -65,7 +68,7 @@ public String createJurusan(@Valid @ModelAttribute JurusanDTO jurusanDTO, Bindin
     }
     jurusanService.saveJurusan(jurusanDTO);
     return "redirect:/admin/jurusan";
-}
+    }
 
     @GetMapping("/jurusan/update/{id}") 
     public String updateJurusanForm(@PathVariable Long id, Model model) { 
@@ -110,10 +113,7 @@ public String createJurusan(@Valid @ModelAttribute JurusanDTO jurusanDTO, Bindin
     }
 
 
-
     // mahasiswa end
-
-  
     @GetMapping("/hasilTes")
     public String hasilTesForm(Model model) {
         model.addAttribute("hasilTes", new HasilTesDTO());
@@ -166,8 +166,7 @@ public String createJurusan(@Valid @ModelAttribute JurusanDTO jurusanDTO, Bindin
 
     // Kembalikan ke halaman form hasil tes
     return "admin/hasilTesForm";
-}
-
+    }
 
     // hasil test end
 
@@ -179,5 +178,33 @@ public String createJurusan(@Valid @ModelAttribute JurusanDTO jurusanDTO, Bindin
             session.invalidate(); 
         } 
         model.addAttribute("message", "Anda telah berhasil logout."); 
-        return "admin/logout"; }
+        return "admin/logout"; 
+    }
+
+
+    // Profile 
+    @GetMapping("/profile") 
+     public String adminProfile(HttpSession session, Model model) { 
+        User user = (User) session.getAttribute("user"); 
+        if (user == null || !"ADMIN".equals(user.getRole())) { 
+            return "redirect:/login"; 
+        } 
+        model.addAttribute("user", user); 
+        return "admin/profile"; 
+        }
+
+    @PostMapping("/uploadProfilePicture")
+    public String uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
+    User user = (User) session.getAttribute("user");
+    try {
+        userService.saveProfilePicture(user, file);
+        redirectAttributes.addFlashAttribute("message", "Gambar profil berhasil diunggah!");
+    } catch (IOException e) {
+        redirectAttributes.addFlashAttribute("errorMessage", "Gagal mengunggah gambar profil.");
+    }
+    return "redirect:/admin/profile";
+    }
+    // Profile Ends
+
+
 }

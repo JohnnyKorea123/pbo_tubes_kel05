@@ -18,23 +18,15 @@ public class CalonMahasiswaDTO {
 
     @NotBlank(message = "Nama tidak boleh kosong.")
     private String nama;
-    
+
     @NotBlank(message = "notelp tidak boleh kosong.")
     private String notelp;
 
     @NotEmpty(message = "Jurusan yang diminati tidak boleh kosong.")
     private String jurusanYangDiminati;
-
     private String statusPenerimaan;
-
     private Jurusan jurusan;
-
     private User user;
-
     private Long hasilTesId;
-
-    // Tambahkan field totalNilai
     private int totalNilai;
-
-    // Getters and Setters
 }

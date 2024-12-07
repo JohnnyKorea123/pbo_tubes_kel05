@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,6 +21,12 @@
         font-weight: bold;
         color: #007bff !important;
       }
+      .profile-picture {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
     </style>
   </head>
   <body>
@@ -31,13 +37,16 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+        <div th:if="${successMessage != null}" class="alert alert-success" role="alert"><span th:text="${successMessage}"> </span></div>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link text-danger" href="#" th:href="@{/calonMahasiswa/logout}"> <i class="fas fa-sign-out-alt"></i> Logout </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item d-flex align-items-center">
               <span class="nav-link">Halo, <strong th:text="${user.username}"></strong></span>
+              <img th:src="@{${user.profilePicture}}" alt="Profile Picture" class="profile-picture ms-2" />
+              <a class="nav-link" href="#" th:href="@{/calonMahasiswa/profile}">Lihat Profil</a>
             </li>
           </ul>
         </div>

@@ -31,10 +31,8 @@ public class CalonMahasiswa extends Person {
     @OneToOne
     @JoinColumn(name = "hasil_tes_id")
     private HasilTes hasilTes;
-
-    
-    
 }
+
 
 
 

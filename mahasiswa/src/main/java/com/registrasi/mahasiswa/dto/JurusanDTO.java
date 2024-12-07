@@ -1,5 +1,9 @@
 package com.registrasi.mahasiswa.dto;
 
+import java.util.List;
+
+import com.registrasi.mahasiswa.model.CalonMahasiswa;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -13,6 +17,9 @@ public class JurusanDTO {
     @NotBlank(message = "Nama jurusan tidak boleh kosong")
     @Size(min = 10, message = "Nama jurusan harus memiliki minimal 10 huruf")
     private String namaJurusan;
+
+
+    private List<CalonMahasiswa> calonMahasiswaList;
     
     // Getters and Setters
 }
