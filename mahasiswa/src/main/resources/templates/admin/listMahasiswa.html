@@ -19,7 +19,10 @@
       <form th:action="@{/admin/mahasiswa/cari}" method="get" class="mb-4">
         <div class="form-row">
           <div class="col">
-            <input type="text" name="jurusan" class="form-control" placeholder="Cari berdasarkan jurusan" />
+            <select name="jurusan" class="form-control">
+              <option value="">Pilih Jurusan</option>
+              <option th:each="jurusan : ${jurusanList}" th:value="${jurusan.id}" th:text="${jurusan.namaJurusan}"></option>
+            </select>
           </div>
           <div class="col">
             <select name="status" class="form-control">
@@ -36,16 +39,26 @@
       <table class="table table-bordered">
         <thead>
           <tr>
+            <th>ID Mahasiswa</th>
             <th>Nama Mahasiswa</th>
-            <th>Jurusan yang Diminati</th>
+            <th>Jurusan yang Diminati 1</th>
+            <th>Jurusan yang Diminati 2</th>
+            <th>Jurusan yang Diminati 3</th>
+            <th>Jurusan yang Diminati 4</th>
             <th>Status Penerimaan</th>
           </tr>
         </thead>
         <tbody>
-          <tr th:each="mahasiswa : ${mahasiswaList}">
-            <td th:text="${mahasiswa.nama}">Nama Mahasiswa</td>
-            <td th:text="${mahasiswa.jurusanYangDiminati}">Jurusan yang Diminati</td>
-            <td th:text="${mahasiswa.statusPenerimaan}">Status Penerimaan</td>
+          <tr th:each="calonMahasiswa : ${mahasiswaList}">
+            <td th:text="${calonMahasiswa.id}">ID Mahasiswa</td>
+            <td th:text="${calonMahasiswa.nama}">Nama Mahasiswa</td>
+            <td th:each="jurusan, iterStat : ${calonMahasiswa.jurusanYangDiminati}">
+              <span th:if="${iterStat.index == 0}" th:text="${jurusan.namaJurusan}">Jurusan yang Diminati 1</span>
+              <span th:if="${iterStat.index == 1}" th:text="${jurusan.namaJurusan}">Jurusan yang Diminati 2</span>
+              <span th:if="${iterStat.index == 2}" th:text="${jurusan.namaJurusan}">Jurusan yang Diminati 3</span>
+              <span th:if="${iterStat.index == 3}" th:text="${jurusan.namaJurusan}">Jurusan yang Diminati 4</span>
+            </td>
+            <td th:text="${calonMahasiswa.statusPenerimaan}">Status Penerimaan</td>
           </tr>
         </tbody>
       </table>

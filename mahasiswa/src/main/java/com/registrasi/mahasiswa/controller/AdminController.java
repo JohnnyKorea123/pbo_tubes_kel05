@@ -94,23 +94,43 @@ public class AdminController {
     // mahasiswa start
     @GetMapping("/mahasiswa")
     public String listMahasiswaByRole(Model model) { 
-        List<User> userList = userService.findByRole("USER"); model.addAttribute("userList", userList); 
+        List<User> userList = userService.findByRole("USER"); 
+        model.addAttribute("userList", userList); 
         return "admin/listMahasiswa"; 
     }
 
-    @GetMapping("/mahasiswa/{status}") public String listMahasiswaByStatus(@PathVariable String status, Model model) { 
-        boolean isLulus = status.equalsIgnoreCase("lulus"); 
-        List<CalonMahasiswaDTO> mahasiswaList = calonMahasiswaService.findAll().stream() .filter(m -> (m.getTotalNilai() >= 60) == isLulus) .toList(); 
-        model.addAttribute("mahasiswaList", mahasiswaList); 
-        return "admin/listMahasiswa"; 
-    }
+    @GetMapping("/mahasiswa/{status}")
+public String listMahasiswaByStatus(@PathVariable String status, Model model) {
+    boolean isLulus = status.equalsIgnoreCase("lulus");
+    List<CalonMahasiswaDTO> mahasiswaList = calonMahasiswaService.findAll().stream()
+        .filter(m -> (m.getTotalNilai() >= 60) == isLulus)
+        .toList();
+    model.addAttribute("mahasiswaList", mahasiswaList);
+    model.addAttribute("jurusanList", jurusanService.getAllJurusan());
+    return "admin/listMahasiswa";
+}
 
-    @GetMapping("/mahasiswa/cari") 
-    public String cariMahasiswa(@RequestParam(required = false) String jurusan, @RequestParam(required = false) String status, Model model) { 
-        List<CalonMahasiswaDTO> mahasiswaList = calonMahasiswaService.findAll().stream() .filter(m -> (jurusan == null || jurusan.isEmpty() || m.getJurusanYangDiminati().equalsIgnoreCase(jurusan)) && (status == null || status.isEmpty() || (status.equalsIgnoreCase("lulus") && m.getTotalNilai() >= 60) || (status.equalsIgnoreCase("tidak_lulus") && m.getTotalNilai() < 60))) .toList(); 
-        model.addAttribute("mahasiswaList", mahasiswaList); 
-        return "admin/listMahasiswa"; 
-    }
+@GetMapping("/mahasiswa/cari")
+public String cariMahasiswa(@RequestParam(required = false) Long jurusan, @RequestParam(required = false) String status, Model model) {
+    List<CalonMahasiswaDTO> mahasiswaList = calonMahasiswaService.findAll().stream()
+        .filter(m -> (jurusan == null || 
+                    m.getJurusanYangDiminati().stream().anyMatch(j -> j.getId().equals(jurusan))) && 
+                    (status == null || status.isEmpty() || 
+                    (status.equalsIgnoreCase("lulus") && m.getTotalNilai() >= 60) || 
+                    (status.equalsIgnoreCase("tidak_lulus") && m.getTotalNilai() < 60)))
+        .toList();
+    model.addAttribute("mahasiswaList", mahasiswaList);
+    model.addAttribute("jurusanList", jurusanService.getAllJurusan());
+    return "admin/listMahasiswa";
+}
+
+    
+
+
+
+
+    
+
 
 
     // mahasiswa end
@@ -169,8 +189,6 @@ public class AdminController {
     }
 
     // hasil test end
-
-
     @GetMapping("/logout") 
     public String logout(HttpServletRequest request, Model model) { 
         HttpSession session = request.getSession(false); 
@@ -205,5 +223,6 @@ public class AdminController {
     return "redirect:/admin/profile";
     }
     // Profile Ends
+
 
 }

@@ -15,11 +15,9 @@ public class UserDTO {
     @NotBlank(message = "Password tidak boleh kosong")
     private String password;
     
-    private String profilePicture;
-
     private String role;
 
- 
+    private String profilePicture;
 
     // Getters and Setters
 }

@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login", "/register", "/error", "/css/**", "/js/**", "/images/**");
     }
+    
     @Override 
     public void addResourceHandlers(ResourceHandlerRegistry registry) { 
         registry.addResourceHandler("/uploads/profile-pictures/**") .addResourceLocations("file:uploads/profile-pictures/"); 

@@ -67,6 +67,7 @@ public class LoginController {
         return "calonMahasiswa/dashboard";
     }
 
+
     @GetMapping("/register")
     public String registerForm(Model model) {
         model.addAttribute("user", new UserDTO());
@@ -86,7 +87,5 @@ public class LoginController {
         model.addAttribute("message", "Akun berhasil didaftarkan!");
         return "registerSuccess";
     }
-
-    
     
 }

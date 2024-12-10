@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.registrasi.mahasiswa.dto.CalonMahasiswaDTO;
+import com.registrasi.mahasiswa.dto.JurusanDTO;
 import com.registrasi.mahasiswa.model.CalonMahasiswa;
 import com.registrasi.mahasiswa.model.HasilTes;
+import com.registrasi.mahasiswa.model.Jurusan;
 import com.registrasi.mahasiswa.model.User;
 import com.registrasi.mahasiswa.repository.CalonMahasiswaRepository;
 import com.registrasi.mahasiswa.repository.HasilTesRepository;
@@ -42,6 +45,7 @@ public class CalonMahasiswaService {
         calonMahasiswa = calonMahasiswaRepository.save(calonMahasiswa);
         return convertToDTO(calonMahasiswa);
     }
+    
 
     public List<CalonMahasiswaDTO> findAll() {
         List<CalonMahasiswa> calonMahasiswaList = calonMahasiswaRepository.findAll();
@@ -62,14 +66,26 @@ public class CalonMahasiswaService {
         calonMahasiswaDTO.setNik(calonMahasiswa.getNik());
         calonMahasiswaDTO.setNama(calonMahasiswa.getNama());
         calonMahasiswaDTO.setNotelp(calonMahasiswa.getNotelp());
-        calonMahasiswaDTO.setJurusanYangDiminati(calonMahasiswa.getJurusanYangDiminati());
         calonMahasiswaDTO.setStatusPenerimaan(calonMahasiswa.getStatusPenerimaan());
         if (calonMahasiswa.getHasilTes() != null) {
             calonMahasiswaDTO.setHasilTesId(calonMahasiswa.getHasilTes().getId());
             calonMahasiswaDTO.setTotalNilai(calonMahasiswa.getHasilTes().getTotalNilai());
         }
+        List<JurusanDTO> jurusanYangDiminati = calonMahasiswa.getJurusanYangDiminati().stream()
+            .map(jurusan -> {
+                JurusanDTO jurusanDTO = new JurusanDTO();
+                jurusanDTO.setId(jurusan.getId());
+                jurusanDTO.setNamaJurusan(jurusan.getNamaJurusan());
+                return jurusanDTO;
+            })
+            .collect(Collectors.toList());
+        calonMahasiswaDTO.setJurusanYangDiminati(jurusanYangDiminati);
         return calonMahasiswaDTO;
     }
+    
+
+    
+    
 
     public CalonMahasiswa convertToEntity(CalonMahasiswaDTO calonMahasiswaDTO) {
         CalonMahasiswa calonMahasiswa = new CalonMahasiswa();
@@ -77,16 +93,23 @@ public class CalonMahasiswaService {
         calonMahasiswa.setNik(calonMahasiswaDTO.getNik());
         calonMahasiswa.setNama(calonMahasiswaDTO.getNama());
         calonMahasiswa.setNotelp(calonMahasiswaDTO.getNotelp());
-        calonMahasiswa.setJurusanYangDiminati(calonMahasiswaDTO.getJurusanYangDiminati());
         calonMahasiswa.setStatusPenerimaan(calonMahasiswaDTO.getStatusPenerimaan());
-        calonMahasiswa.setUser(calonMahasiswaDTO.getUser());
         if (calonMahasiswaDTO.getHasilTesId() != null) {
             HasilTes hasilTes = new HasilTes();
             hasilTes.setId(calonMahasiswaDTO.getHasilTesId());
             calonMahasiswa.setHasilTes(hasilTes);
         }
+        List<Jurusan> jurusanYangDiminati = calonMahasiswaDTO.getJurusanYangDiminati().stream()
+            .map(jurusanDTO -> {
+                Jurusan jurusan = new Jurusan();
+                jurusan.setId(jurusanDTO.getId());
+                return jurusan;
+            })
+            .collect(Collectors.toList());
+        calonMahasiswa.setJurusanYangDiminati(jurusanYangDiminati);
         return calonMahasiswa;
     }
+    
 
     public void saveProfilePicture(User user, MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -106,3 +129,4 @@ public class CalonMahasiswaService {
         }
     }
 }
+

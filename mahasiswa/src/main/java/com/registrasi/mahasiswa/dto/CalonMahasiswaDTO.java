@@ -1,7 +1,6 @@
 package com.registrasi.mahasiswa.dto;
 
-import com.registrasi.mahasiswa.model.Jurusan;
-import com.registrasi.mahasiswa.model.User;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,10 +22,9 @@ public class CalonMahasiswaDTO {
     private String notelp;
 
     @NotEmpty(message = "Jurusan yang diminati tidak boleh kosong.")
-    private String jurusanYangDiminati;
+    private List<JurusanDTO> jurusanYangDiminati;
+
     private String statusPenerimaan;
-    private Jurusan jurusan;
-    private User user;
     private Long hasilTesId;
     private int totalNilai;
 }

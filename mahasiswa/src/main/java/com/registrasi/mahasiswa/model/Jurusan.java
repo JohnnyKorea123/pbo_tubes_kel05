@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +23,6 @@ public class Jurusan {
     @NotBlank(message = "namaJurusan tidak boleh kosong")
     private String namaJurusan;
 
-    @OneToMany(mappedBy = "jurusan")
+    @ManyToMany(mappedBy = "jurusanYangDiminati")
     private List<CalonMahasiswa> calonMahasiswaList;
 }
