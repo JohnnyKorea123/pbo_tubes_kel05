@@ -128,20 +128,15 @@ public class CalonMahasiswaController {
     
 
 
-    
 
    @GetMapping("/profile")
-public String mahasiswaProfile(HttpSession session, Model model) {
-    // Ambil user dari session
+    public String mahasiswaProfile(HttpSession session, Model model) {
     User user = (User) session.getAttribute("user");
     if (user == null || !"USER".equals(user.getRole())) {
         return "redirect:/login"; 
     }
-
-    // Cari data calon mahasiswa berdasarkan user
     CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
     if (calonMahasiswa == null) {
-        // Jika data calon mahasiswa tidak ditemukan, buat objek kosong dengan pesan default
         calonMahasiswa = new CalonMahasiswa();
         calonMahasiswa.setNama("Nama belum diisi");
         calonMahasiswa.setNik("NIK belum diisi");
@@ -152,7 +147,7 @@ public String mahasiswaProfile(HttpSession session, Model model) {
     model.addAttribute("calonMahasiswa", calonMahasiswa);
     model.addAttribute("user", user);
     return "calonMahasiswa/profile"; // Return template profile
-}
+    }
 
     @PostMapping("/uploadProfilePicture")
     public String uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
