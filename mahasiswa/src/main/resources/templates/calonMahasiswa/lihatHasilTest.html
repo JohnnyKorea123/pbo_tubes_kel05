@@ -45,19 +45,19 @@
             </li>
             <li class="list-group-item">
               <strong>Jurusan yang Diminati 1:</strong>
-              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 0}" th:text="${calonMahasiswa.jurusanYangDiminati[0].namaJurusan}"></span>
+              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 0}" th:text="${calonMahasiswa.jurusanYangDiminati[0].namaJurusan}">Jurusan belum diisi</span>
             </li>
             <li class="list-group-item">
               <strong>Jurusan yang Diminati 2:</strong>
-              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 1}" th:text="${calonMahasiswa.jurusanYangDiminati[1].namaJurusan}"></span>
+              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 1}" th:text="${calonMahasiswa.jurusanYangDiminati[1].namaJurusan}">Jurusan belum diisi</span>
             </li>
             <li class="list-group-item">
               <strong>Jurusan yang Diminati 3:</strong>
-              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 2}" th:text="${calonMahasiswa.jurusanYangDiminati[2].namaJurusan}"></span>
+              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 2}" th:text="${calonMahasiswa.jurusanYangDiminati[2].namaJurusan}">Jurusan belum diisi</span>
             </li>
             <li class="list-group-item">
               <strong>Jurusan yang Diminati 4:</strong>
-              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 3}" th:text="${calonMahasiswa.jurusanYangDiminati[3].namaJurusan}"></span>
+              <span th:if="${calonMahasiswa.jurusanYangDiminati.size() > 3}" th:text="${calonMahasiswa.jurusanYangDiminati[3].namaJurusan}">Jurusan belum diisi</span>
             </li>
             <li class="list-group-item">
               <strong>Total Nilai:</strong>
@@ -68,7 +68,11 @@
               <span th:text="${calonMahasiswa.statusPenerimaan}"></span>
             </li>
             <li class="list-group-item">
-              <a class="btn btn-primary" data-bs-toggle="collapse" href="#nilaiDetail" role="button" aria-expanded="false" aria-controls="nilaiDetail"> Lihat Detail Nilai </a>
+              <strong>Jurusan yang Diterima:</strong>
+              <span th:if="${calonMahasiswa.jurusanDiterima != null}" th:text="${calonMahasiswa.jurusanDiterima.jurusan.namaJurusan}">Jurusan belum diisi</span>
+            </li>
+            <li class="list-group-item">
+              <a class="btn btn-primary" th:classappend="${errorMessage != null} ? 'disabled'" data-bs-toggle="collapse" href="#nilaiDetail" role="button" aria-expanded="false" aria-controls="nilaiDetail"> Lihat Detail Nilai </a>
               <div class="collapse mt-3" id="nilaiDetail">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">
@@ -87,6 +91,8 @@
               </div>
             </li>
           </ul>
+          <!-- Pesan Kesalahan -->
+          <div class="alert alert-danger mt-3" th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
         </div>
       </div>
     </div>

@@ -22,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.registrasi.mahasiswa.dto.CalonMahasiswaDTO;
 import com.registrasi.mahasiswa.dto.JurusanDTO;
 import com.registrasi.mahasiswa.model.CalonMahasiswa;
+import com.registrasi.mahasiswa.model.HasilTes;
+import com.registrasi.mahasiswa.model.Jurusan;
 import com.registrasi.mahasiswa.model.User;
 import com.registrasi.mahasiswa.service.CalonMahasiswaService;
 import com.registrasi.mahasiswa.service.JurusanService;
@@ -51,18 +53,23 @@ public class CalonMahasiswaController {
 
     @PostMapping("/inputBiodata")
     public String saveBiodata(@ModelAttribute CalonMahasiswaDTO calonMahasiswaDTO, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
-        CalonMahasiswa existingCalonMahasiswa = calonMahasiswaService.findByUser(user);
-        if (existingCalonMahasiswa != null) {
-            redirectAttributes.addFlashAttribute("successMessage", "Sudah Mengisi Biodata");
-            return "redirect:/calonMahasiswa/dashboard";
-        }
-
-        CalonMahasiswaDTO savedCalonMahasiswa = calonMahasiswaService.saveCalonMahasiswa(calonMahasiswaDTO, user);
-        session.setAttribute("calonMahasiswa", savedCalonMahasiswa);
+    User user = (User) session.getAttribute("user");
+    CalonMahasiswa existingCalonMahasiswa = calonMahasiswaService.findByUser(user);
+    if (existingCalonMahasiswa != null) {
         redirectAttributes.addFlashAttribute("successMessage", "Sudah Mengisi Biodata");
         return "redirect:/calonMahasiswa/dashboard";
     }
+
+    CalonMahasiswaDTO savedCalonMahasiswaDTO = calonMahasiswaService.saveCalonMahasiswa(calonMahasiswaDTO, user);
+    Jurusan jurusanYangDiterima = calonMahasiswaService.tentukanJurusanYangDiterima(savedCalonMahasiswaDTO);
+    savedCalonMahasiswaDTO.setStatusPenerimaan(jurusanYangDiterima != null ? "Diterima" : "Tidak Diterima");
+    calonMahasiswaService.saveCalonMahasiswa(savedCalonMahasiswaDTO, user);
+
+    session.setAttribute("calonMahasiswa", savedCalonMahasiswaDTO);
+    redirectAttributes.addFlashAttribute("successMessage", "Sudah Mengisi Biodata");
+    return "redirect:/calonMahasiswa/dashboard";
+}
+
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -84,31 +91,67 @@ public class CalonMahasiswaController {
     @GetMapping("/hasilTest")
     public String lihatHasilTest(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
+        if (user == null || !"USER".equals(user.getRole())) {
+            return "redirect:/login"; // Redirect jika user belum login atau tidak memiliki peran USER
+        }
+
         CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
         if (calonMahasiswa == null) {
-            model.addAttribute("errorMessage", "Mohon Masukan Biodata Terlebih Dahulu dan Memilih Jurusan");
+            model.addAttribute("errorMessage", "Mohon masukkan biodata terlebih dahulu dan memilih jurusan.");
             return "calonMahasiswa/inputBiodata";
         }
+
+        // Periksa apakah biodata sudah diisi
+        if (calonMahasiswa.getNik() == null) {
+            calonMahasiswa.setNik("NIK belum diisi");
+        }
+        if (calonMahasiswa.getNama() == null) {
+            calonMahasiswa.setNama("Nama belum diisi");
+        }
+        if (calonMahasiswa.getNotelp() == null) {
+            calonMahasiswa.setNotelp("No. Telp belum diisi");
+        }
+        if (calonMahasiswa.getJurusanYangDiminati().isEmpty()) {
+            model.addAttribute("errorMessage", "Belum memilih jurusan.");
+        }
+        if (calonMahasiswa.getHasilTes() == null) {
+            calonMahasiswa.setHasilTes(new HasilTes());
+            calonMahasiswa.getHasilTes().setTotalNilai(0);
+            calonMahasiswa.getHasilTes().setNilaiA(0);
+            calonMahasiswa.getHasilTes().setNilaiB(0);
+            calonMahasiswa.getHasilTes().setNilaiC(0);
+        }
+
         model.addAttribute("calonMahasiswa", calonMahasiswa);
-        System.out.println("Calon Mahasiswa: " + calonMahasiswa); // Tambahkan log ini
         return "calonMahasiswa/lihatHasilTest";
     }
 
-    @GetMapping("/profile")
-    public String mahasiswaProfile(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user == null || !"USER".equals(user.getRole())) {
-            return "redirect:/login";
-        }
-        CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
-        if (calonMahasiswa == null) {
-            model.addAttribute("errorMessage", "Data calon mahasiswa tidak ditemukan.");
-            return "error";
-        }
-        model.addAttribute("calonMahasiswa", calonMahasiswa);
-        model.addAttribute("user", user); // Tambahkan objek User ke model
-        return "calonMahasiswa/profile";
+
+    
+
+   @GetMapping("/profile")
+public String mahasiswaProfile(HttpSession session, Model model) {
+    // Ambil user dari session
+    User user = (User) session.getAttribute("user");
+    if (user == null || !"USER".equals(user.getRole())) {
+        return "redirect:/login"; 
     }
+
+    // Cari data calon mahasiswa berdasarkan user
+    CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
+    if (calonMahasiswa == null) {
+        // Jika data calon mahasiswa tidak ditemukan, buat objek kosong dengan pesan default
+        calonMahasiswa = new CalonMahasiswa();
+        calonMahasiswa.setNama("Nama belum diisi");
+        calonMahasiswa.setNik("NIK belum diisi");
+        calonMahasiswa.setNotelp("No. Telp belum diisi");
+    }
+
+    // Tambahkan data ke model
+    model.addAttribute("calonMahasiswa", calonMahasiswa);
+    model.addAttribute("user", user);
+    return "calonMahasiswa/profile"; // Return template profile
+}
 
     @PostMapping("/uploadProfilePicture")
     public String uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
@@ -131,4 +174,6 @@ public class CalonMahasiswaController {
         model.addAttribute("message", "Anda telah berhasil logout.");
         return "calonMahasiswa/logout";
     }
+
+    
 }

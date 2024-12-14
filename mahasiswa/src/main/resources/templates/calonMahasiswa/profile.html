@@ -22,15 +22,20 @@
   </head>
   <body>
     <div class="container mt-5">
-      <h1 class="text-center mb-4">Profil Mahassiswa</h1>
+      <h1 class="text-center mb-4">Profil Mahasiswa</h1>
       <div class="row justify-content-center">
         <div class="col-md-6">
           <div class="card border-0 shadow">
             <div class="card-body text-center">
-              <img th:src="@{${user.profilePicture}}" alt="Profile Picture" class="profile-picture mb-3" />
-              <h5 class="card-title">Nama: [[${calonMahasiswa.nama}]]</h5>
-              <p class="card-text">NIK: [[${calonMahasiswa.nik}]]</p>
-              <p class="card-text">No. Telp: [[${calonMahasiswa.notelp}]]</p>
+              <!-- Default profile picture jika user.profilePicture null -->
+              <img th:src="@{${user.profilePicture} != null ? ${user.profilePicture} : '/img/default-profile.jpg'}" alt="Profile Picture" class="profile-picture mb-3" />
+              <!-- Tampilkan nama atau pesan default jika null -->
+              <h5 class="card-title">Nama: <span th:text="${calonMahasiswa.nama != null ? calonMahasiswa.nama : 'Nama belum diisi'}"></span></h5>
+              <!-- Tampilkan NIK atau pesan default jika null -->
+              <p class="card-text">NIK: <span th:text="${calonMahasiswa.nik != null ? calonMahasiswa.nik : 'NIK belum diisi'}"></span></p>
+              <!-- Tampilkan nomor telepon atau pesan default jika null -->
+              <p class="card-text">No. Telp: <span th:text="${calonMahasiswa.notelp != null ? calonMahasiswa.notelp : 'No. Telp belum diisi'}"></span></p>
+              <!-- Form upload gambar -->
               <form th:action="@{/calonMahasiswa/uploadProfilePicture}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                   <input type="file" name="profilePicture" class="form-control" />

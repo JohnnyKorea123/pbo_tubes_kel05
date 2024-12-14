@@ -1,5 +1,6 @@
 package com.registrasi.mahasiswa.service;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -24,6 +25,8 @@ import com.registrasi.mahasiswa.repository.CalonMahasiswaRepository;
 import com.registrasi.mahasiswa.repository.HasilTesRepository;
 import com.registrasi.mahasiswa.repository.UserRepository;
 
+
+
 @Service
 public class CalonMahasiswaService {
     @Autowired
@@ -32,6 +35,7 @@ public class CalonMahasiswaService {
     @Autowired
     private HasilTesRepository hasilTesRepository;
 
+    
     @Autowired
     private UserRepository userRepository;
 
@@ -42,9 +46,30 @@ public class CalonMahasiswaService {
             HasilTes hasilTes = hasilTesRepository.findById(calonMahasiswaDTO.getHasilTesId()).orElse(null);
             calonMahasiswa.setHasilTes(hasilTes);
         }
+        Jurusan jurusanYangDiterima = tentukanJurusanYangDiterima(calonMahasiswaDTO);
+        calonMahasiswa.setStatusPenerimaan(jurusanYangDiterima != null ? "Diterima" : "Tidak Diterima");
         calonMahasiswa = calonMahasiswaRepository.save(calonMahasiswa);
         return convertToDTO(calonMahasiswa);
     }
+
+    public Jurusan tentukanJurusanYangDiterima(CalonMahasiswaDTO calonMahasiswaDTO) {
+        List<JurusanDTO> jurusanYangDiminati = calonMahasiswaDTO.getJurusanYangDiminati();
+        for (JurusanDTO jurusan : jurusanYangDiminati) {
+            if (calonMahasiswaDTO.getTotalNilai() >= jurusan.getSyaratNilai()) {
+                return convertToEntity(jurusan);
+            }
+        }
+        return null; // Mengembalikan null jika tidak ada jurusan yang memenuhi syarat
+    }
+    
+    private Jurusan convertToEntity(JurusanDTO jurusanDTO) {
+        Jurusan jurusan = new Jurusan();
+        jurusan.setId(jurusanDTO.getId());
+        jurusan.setNamaJurusan(jurusanDTO.getNamaJurusan());
+        jurusan.setSyaratNilai(jurusanDTO.getSyaratNilai());
+        return jurusan;
+    }
+    
     
 
     public List<CalonMahasiswaDTO> findAll() {
@@ -76,16 +101,13 @@ public class CalonMahasiswaService {
                 JurusanDTO jurusanDTO = new JurusanDTO();
                 jurusanDTO.setId(jurusan.getId());
                 jurusanDTO.setNamaJurusan(jurusan.getNamaJurusan());
+                jurusanDTO.setSyaratNilai(jurusan.getSyaratNilai());
                 return jurusanDTO;
             })
             .collect(Collectors.toList());
         calonMahasiswaDTO.setJurusanYangDiminati(jurusanYangDiminati);
         return calonMahasiswaDTO;
     }
-    
-
-    
-    
 
     public CalonMahasiswa convertToEntity(CalonMahasiswaDTO calonMahasiswaDTO) {
         CalonMahasiswa calonMahasiswa = new CalonMahasiswa();
@@ -103,13 +125,14 @@ public class CalonMahasiswaService {
             .map(jurusanDTO -> {
                 Jurusan jurusan = new Jurusan();
                 jurusan.setId(jurusanDTO.getId());
+                jurusan.setNamaJurusan(jurusanDTO.getNamaJurusan());
+                jurusan.setSyaratNilai(jurusanDTO.getSyaratNilai());
                 return jurusan;
             })
             .collect(Collectors.toList());
         calonMahasiswa.setJurusanYangDiminati(jurusanYangDiminati);
         return calonMahasiswa;
     }
-    
 
     public void saveProfilePicture(User user, MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -128,5 +151,51 @@ public class CalonMahasiswaService {
             throw new IOException("Gagal menyimpan file: " + fileName, e);
         }
     }
-}
 
+    public List<CalonMahasiswa> findAllWithJurusanDiterima() {
+        return calonMahasiswaRepository.findAllWithJurusanDiterima();
+    }
+
+
+
+    public List<CalonMahasiswa> findAllWithFilters(Long jurusanId, String status, String nama) {
+        List<CalonMahasiswa> mahasiswaList = calonMahasiswaRepository.findAll();
+    
+        return mahasiswaList.stream()
+            .filter(mahasiswa -> {
+                // Filter berdasarkan jurusan diterima
+                if (jurusanId != null) {
+                    // Hanya periksa jika jurusan diterima tersedia
+                    if (mahasiswa.getJurusanDiterima() == null || 
+                        !mahasiswa.getJurusanDiterima().getJurusan().getId().equals(jurusanId)) {
+                        return false;
+                    }
+                }
+    
+                // Filter berdasarkan status
+                if (status != null && !status.isEmpty()) {
+                    boolean diterima = mahasiswa.getJurusanDiterima() != null;
+                    boolean statusMatch = (status.equalsIgnoreCase("lulus") && diterima) ||
+                                          (status.equalsIgnoreCase("tidak_lulus") && !diterima);
+                    if (!statusMatch) {
+                        return false;
+                    }
+                }
+    
+                // Filter berdasarkan nama
+                if (nama != null && !nama.isEmpty()) {
+                    if (!mahasiswa.getNama().toLowerCase().contains(nama.toLowerCase())) {
+                        return false;
+                    }
+                }
+    
+                return true; // Lulus semua filter
+            })
+            .collect(Collectors.toList());
+    }
+
+
+   
+
+    
+}
