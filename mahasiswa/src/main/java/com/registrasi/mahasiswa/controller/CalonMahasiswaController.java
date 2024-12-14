@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.registrasi.mahasiswa.dto.CalonMahasiswaDTO;
 import com.registrasi.mahasiswa.dto.JurusanDTO;
 import com.registrasi.mahasiswa.model.CalonMahasiswa;
+import com.registrasi.mahasiswa.model.Jurusan;
 import com.registrasi.mahasiswa.model.User;
 import com.registrasi.mahasiswa.service.CalonMahasiswaService;
 import com.registrasi.mahasiswa.service.JurusanService;
@@ -51,18 +52,23 @@ public class CalonMahasiswaController {
 
     @PostMapping("/inputBiodata")
     public String saveBiodata(@ModelAttribute CalonMahasiswaDTO calonMahasiswaDTO, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
-        CalonMahasiswa existingCalonMahasiswa = calonMahasiswaService.findByUser(user);
-        if (existingCalonMahasiswa != null) {
-            redirectAttributes.addFlashAttribute("successMessage", "Sudah Mengisi Biodata");
-            return "redirect:/calonMahasiswa/dashboard";
-        }
-
-        CalonMahasiswaDTO savedCalonMahasiswa = calonMahasiswaService.saveCalonMahasiswa(calonMahasiswaDTO, user);
-        session.setAttribute("calonMahasiswa", savedCalonMahasiswa);
+    User user = (User) session.getAttribute("user");
+    CalonMahasiswa existingCalonMahasiswa = calonMahasiswaService.findByUser(user);
+    if (existingCalonMahasiswa != null) {
         redirectAttributes.addFlashAttribute("successMessage", "Sudah Mengisi Biodata");
         return "redirect:/calonMahasiswa/dashboard";
     }
+
+    CalonMahasiswaDTO savedCalonMahasiswaDTO = calonMahasiswaService.saveCalonMahasiswa(calonMahasiswaDTO, user);
+    Jurusan jurusanYangDiterima = calonMahasiswaService.tentukanJurusanYangDiterima(savedCalonMahasiswaDTO);
+    savedCalonMahasiswaDTO.setStatusPenerimaan(jurusanYangDiterima != null ? "Diterima" : "Tidak Diterima");
+    calonMahasiswaService.saveCalonMahasiswa(savedCalonMahasiswaDTO, user);
+
+    session.setAttribute("calonMahasiswa", savedCalonMahasiswaDTO);
+    redirectAttributes.addFlashAttribute("successMessage", "Sudah Mengisi Biodata");
+    return "redirect:/calonMahasiswa/dashboard";
+}
+
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -89,10 +95,17 @@ public class CalonMahasiswaController {
             model.addAttribute("errorMessage", "Mohon Masukan Biodata Terlebih Dahulu dan Memilih Jurusan");
             return "calonMahasiswa/inputBiodata";
         }
+        
+        // Periksa apakah biodata sudah diisi
+        if (calonMahasiswa.getNik() == null || calonMahasiswa.getNama() == null || calonMahasiswa.getJurusanYangDiminati().isEmpty()) {
+            model.addAttribute("errorMessage", "Belum isi biodata");
+        }
+    
         model.addAttribute("calonMahasiswa", calonMahasiswa);
         System.out.println("Calon Mahasiswa: " + calonMahasiswa); // Tambahkan log ini
         return "calonMahasiswa/lihatHasilTest";
     }
+    
 
     @GetMapping("/profile")
     public String mahasiswaProfile(HttpSession session, Model model) {
@@ -131,4 +144,6 @@ public class CalonMahasiswaController {
         model.addAttribute("message", "Anda telah berhasil logout.");
         return "calonMahasiswa/logout";
     }
+
+    
 }

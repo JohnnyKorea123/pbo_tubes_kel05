@@ -68,7 +68,7 @@
               <span th:text="${calonMahasiswa.statusPenerimaan}"></span>
             </li>
             <li class="list-group-item">
-              <a class="btn btn-primary" data-bs-toggle="collapse" href="#nilaiDetail" role="button" aria-expanded="false" aria-controls="nilaiDetail"> Lihat Detail Nilai </a>
+              <a class="btn btn-primary" th:classappend="${errorMessage != null} ? 'disabled'" data-bs-toggle="collapse" href="#nilaiDetail" role="button" aria-expanded="false" aria-controls="nilaiDetail"> Lihat Detail Nilai </a>
               <div class="collapse mt-3" id="nilaiDetail">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">
@@ -87,6 +87,8 @@
               </div>
             </li>
           </ul>
+          <!-- Pesan Kesalahan -->
+          <div class="alert alert-danger mt-3" th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
         </div>
       </div>
     </div>

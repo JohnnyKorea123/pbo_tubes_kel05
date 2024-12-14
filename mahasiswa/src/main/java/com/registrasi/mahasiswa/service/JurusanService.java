@@ -3,6 +3,7 @@ package com.registrasi.mahasiswa.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.registrasi.mahasiswa.dto.JurusanDTO;
 import com.registrasi.mahasiswa.model.CalonMahasiswa;
 import com.registrasi.mahasiswa.model.Jurusan;
+import com.registrasi.mahasiswa.model.JurusanDiterima;
 import com.registrasi.mahasiswa.repository.CalonMahasiswaRepository;
 import com.registrasi.mahasiswa.repository.JurusanRepository;
 
@@ -55,6 +57,7 @@ public class JurusanService {
         JurusanDTO jurusanDTO = new JurusanDTO();
         jurusanDTO.setId(jurusan.getId());
         jurusanDTO.setNamaJurusan(jurusan.getNamaJurusan());
+        jurusanDTO.setSyaratNilai(jurusan.getSyaratNilai());
         return jurusanDTO;
     }
 
@@ -62,6 +65,7 @@ public class JurusanService {
         Jurusan jurusan = new Jurusan();
         jurusan.setId(jurusanDTO.getId());
         jurusan.setNamaJurusan(jurusanDTO.getNamaJurusan());
+        jurusan.setSyaratNilai(jurusanDTO.getSyaratNilai());
         return jurusan;
     }
 
@@ -81,6 +85,19 @@ public class JurusanService {
             mahasiswa.setJurusanYangDiminati(updatedJurusanList);
             calonMahasiswaRepository.save(mahasiswa);
         }
+    }
+
+     public List<Jurusan> findAllJurusanDiterima() {
+    return calonMahasiswaRepository.findAll().stream()
+        .map(CalonMahasiswa::getJurusanDiterima)
+        .filter(Objects::nonNull)
+        .map(JurusanDiterima::getJurusan)
+        .distinct()
+        .collect(Collectors.toList());
+    }
+
+    public List<Jurusan> findAll() {
+        return jurusanRepository.findAll();
     }
 
 

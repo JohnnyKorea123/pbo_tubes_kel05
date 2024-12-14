@@ -4,11 +4,14 @@ package com.registrasi.mahasiswa.model;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +24,15 @@ public class Jurusan {
     private Long id;
 
     @NotBlank(message = "namaJurusan tidak boleh kosong")
+    @Size(min = 5, message = "Nama jurusan harus memiliki minimal 5 huruf")
     private String namaJurusan;
 
     @ManyToMany(mappedBy = "jurusanYangDiminati")
     private List<CalonMahasiswa> calonMahasiswaList;
+
+    private int SyaratNilai;
+
+
+   @OneToMany(mappedBy = "jurusan", fetch = FetchType.LAZY)
+    private List<JurusanDiterima> jurusanDiterimaList;
 }
