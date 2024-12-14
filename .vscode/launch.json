@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MahasiswaApplication<mahasiswa>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.registrasi.mahasiswa.MahasiswaApplication",
+            "projectName": "mahasiswa",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
