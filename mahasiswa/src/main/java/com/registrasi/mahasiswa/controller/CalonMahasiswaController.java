@@ -22,7 +22,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.registrasi.mahasiswa.dto.CalonMahasiswaDTO;
 import com.registrasi.mahasiswa.dto.JurusanDTO;
 import com.registrasi.mahasiswa.model.CalonMahasiswa;
-import com.registrasi.mahasiswa.model.HasilTes;
 import com.registrasi.mahasiswa.model.Jurusan;
 import com.registrasi.mahasiswa.model.User;
 import com.registrasi.mahasiswa.service.CalonMahasiswaService;
@@ -91,64 +90,61 @@ public class CalonMahasiswaController {
     @GetMapping("/hasilTest")
     public String lihatHasilTest(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        if (user == null || !"USER".equals(user.getRole())) {
-            return "redirect:/login"; // Redirect jika user belum login atau tidak memiliki peran USER
+    
+        // Cek apakah user sudah login
+        if (user == null) {
+            model.addAttribute("errorMessage", "Anda belum login. Silakan login terlebih dahulu.");
+            return "calonMahasiswa/lihatHasilTest";
         }
-
+    
         CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
-        if (calonMahasiswa == null) {
-            model.addAttribute("errorMessage", "Mohon masukkan biodata terlebih dahulu dan memilih jurusan.");
-            return "calonMahasiswa/inputBiodata";
+    
+        // Cek apakah biodata calon mahasiswa belum ada
+        if (calonMahasiswa == null || calonMahasiswa.getNik() == null || 
+            calonMahasiswa.getNama() == null || calonMahasiswa.getJurusanYangDiminati().isEmpty()) {
+            model.addAttribute("errorMessage", "Belum ada data untuk ditampilkan. Silakan lengkapi biodata dan pilih jurusan.");
+            return "calonMahasiswa/lihatHasilTest";
         }
-
-        // Periksa apakah biodata sudah diisi
-        if (calonMahasiswa.getNik() == null) {
-            calonMahasiswa.setNik("NIK belum diisi");
+    
+        // Cek apakah hasil tes belum ada
+        if (calonMahasiswa.getHasilTes() == null || 
+            calonMahasiswa.getHasilTes() == null) {
+            model.addAttribute("errorMessage", "Maaf, saat ini nilai belum tersedia. Silakan coba lagi nanti.");
+            return "calonMahasiswa/lihatHasilTest";
         }
-        if (calonMahasiswa.getNama() == null) {
-            calonMahasiswa.setNama("Nama belum diisi");
-        }
-        if (calonMahasiswa.getNotelp() == null) {
-            calonMahasiswa.setNotelp("No. Telp belum diisi");
-        }
-        if (calonMahasiswa.getJurusanYangDiminati().isEmpty()) {
-            model.addAttribute("errorMessage", "Belum memilih jurusan.");
-        }
-        if (calonMahasiswa.getHasilTes() == null) {
-            calonMahasiswa.setHasilTes(new HasilTes());
-            calonMahasiswa.getHasilTes().setTotalNilai(0);
-            calonMahasiswa.getHasilTes().setNilaiA(0);
-            calonMahasiswa.getHasilTes().setNilaiB(0);
-            calonMahasiswa.getHasilTes().setNilaiC(0);
-        }
-
+    
+        // Jika semua data tersedia, tampilkan hasil tes
         model.addAttribute("calonMahasiswa", calonMahasiswa);
         return "calonMahasiswa/lihatHasilTest";
     }
     
+    
+    
 
-
-
-   @GetMapping("/profile")
+    @GetMapping("/profile")
     public String mahasiswaProfile(HttpSession session, Model model) {
-    User user = (User) session.getAttribute("user");
-    if (user == null || !"USER".equals(user.getRole())) {
-        return "redirect:/login"; 
+        // Ambil user dari session
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"USER".equals(user.getRole())) {
+            return "redirect:/login"; // Redirect jika user belum login atau tidak memiliki peran USER
+        }
+    
+        // Cari data calon mahasiswa berdasarkan user
+        CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
+        if (calonMahasiswa == null) {
+            // Jika data calon mahasiswa tidak ditemukan, buat objek kosong dengan pesan default
+            calonMahasiswa = new CalonMahasiswa();
+            calonMahasiswa.setNama("Nama belum diisi");
+            calonMahasiswa.setNik("NIK belum diisi");
+            calonMahasiswa.setNotelp("No. Telp belum diisi");
+        }
+    
+        // Tambahkan data ke model
+        model.addAttribute("calonMahasiswa", calonMahasiswa);
+        model.addAttribute("user", user);
+        return "calonMahasiswa/profile"; // Return template profile
     }
-    CalonMahasiswa calonMahasiswa = calonMahasiswaService.findByUser(user);
-    if (calonMahasiswa == null) {
-        calonMahasiswa = new CalonMahasiswa();
-        calonMahasiswa.setNama("Nama belum diisi");
-        calonMahasiswa.setNik("NIK belum diisi");
-        calonMahasiswa.setNotelp("No. Telp belum diisi");
-    }
-
-    // Tambahkan data ke model
-    model.addAttribute("calonMahasiswa", calonMahasiswa);
-    model.addAttribute("user", user);
-    return "calonMahasiswa/profile"; // Return template profile
-    }
-
+    
     @PostMapping("/uploadProfilePicture")
     public String uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
@@ -170,6 +166,4 @@ public class CalonMahasiswaController {
         model.addAttribute("message", "Anda telah berhasil logout.");
         return "calonMahasiswa/logout";
     }
-
-    
 }
