@@ -125,6 +125,7 @@ public class CalonMahasiswaController {
         model.addAttribute("calonMahasiswa", calonMahasiswa);
         return "calonMahasiswa/lihatHasilTest";
     }
+    
 
 
     
