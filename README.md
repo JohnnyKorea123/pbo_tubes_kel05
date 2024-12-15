@@ -1,9 +1,18 @@
-APLIKASI PENDAFTARAN MAHASISWA 
+# Aplikasi Pendaftaran Mahasiswa
 
-Nama Kelompok
-Kelas : IT-46-03
-Retsi Andari Rusli (1303223043)
-Deril Wijdan Falih (1303223047)
-Giovanni Nadika  (1303223169)
-Muhammad Ghafarel Faikar Rahman (1303223059)
-Bima Aditya Ramadhan (1303223173)
+Proyek ini merupakan aplikasi berbasis web untuk pendaftaran mahasiswa baru, dikembangkan oleh kelompok IT-46-03 sebagai bagian dari tugas mata kuliah.
+
+## Nama Kelompok
+
+| Nama Lengkap                     | NIM        |
+|----------------------------------|------------|
+| Retsi Andari Rusli              | 1303223043 |
+| Deril Wijdan Falih              | 1303223047 |
+| Giovanni Nadika                 | 1303223169 |
+| Muhammad Ghafarel Faikar Rahman | 1303223059 |
+| Bima Aditya Ramadhan            | 1303223173 |
+
+## Kelas 
+IT-46-03
+
+
