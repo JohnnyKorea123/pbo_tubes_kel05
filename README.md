@@ -11,6 +11,7 @@ Proyek ini merupakan aplikasi berbasis web untuk pendaftaran mahasiswa baru, dik
 | Giovanni Nadika                 | 1303223169 |
 | Muhammad Ghafarel Faikar Rahman | 1303223059 |
 | Bima Aditya Ramadhan            | 1303223173 |
+| Muhammad Shidqul Aziz Lababan   | 1303223132 |
 
 ## Kelas 
 IT-46-03
