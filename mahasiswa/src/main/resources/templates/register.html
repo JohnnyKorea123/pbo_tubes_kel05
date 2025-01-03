@@ -18,7 +18,7 @@
         </div>
 
         <!-- Registration Form -->
-        <form action="/register" method="post">
+        <form id="registerForm" action="/register" method="post">
           <div class="mb-4">
             <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
             <input type="text" id="username" name="username" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username" required />
@@ -39,5 +39,29 @@
         </div>
       </div>
     </div>
+
+    <script>
+      document.getElementById("registerForm").addEventListener("submit", function (event) {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const alertBox = document.getElementById("alert");
+
+        let errorMessage = "";
+
+        if (username.length < 5) {
+          errorMessage += "Username harus memiliki minimal 5 karakter.<br>";
+        }
+
+        if (password.length < 8) {
+          errorMessage += "Password harus memiliki minimal 8 karakter.<br>";
+        }
+
+        if (errorMessage) {
+          event.preventDefault();
+          alertBox.innerHTML = errorMessage;
+          alertBox.classList.remove("hidden");
+        }
+      });
+    </script>
   </body>
 </html>

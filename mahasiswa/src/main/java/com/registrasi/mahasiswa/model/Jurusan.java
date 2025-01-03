@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Jurusan {
     @ManyToMany(mappedBy = "jurusanYangDiminati")
     private List<CalonMahasiswa> calonMahasiswaList;
 
+    @Min(value = 0, message = "Syarat nilai harus lebih dari 0")
     private int SyaratNilai;
 
 

@@ -1,5 +1,6 @@
 package com.registrasi.mahasiswa.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class JurusanDTO {
     private String namaJurusan;
 
 
+    @Min(value = 0, message = "Syarat nilai harus lebih dari 0")
     private int SyaratNilai;
     
 }

@@ -14,12 +14,11 @@ public interface CalonMahasiswaRepository extends JpaRepository<CalonMahasiswa, 
     CalonMahasiswa findByNik(String nik);
     CalonMahasiswa findByUser(User user);
 
-   
-
     @Query("SELECT cm FROM CalonMahasiswa cm " +
            "LEFT JOIN FETCH cm.jurusanDiterima jd " +
            "LEFT JOIN FETCH jd.jurusan j")
     List<CalonMahasiswa> findAllWithJurusanDiterima();
+    
 }
 
 

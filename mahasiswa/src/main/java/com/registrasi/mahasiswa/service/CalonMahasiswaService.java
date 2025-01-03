@@ -71,7 +71,6 @@ public class CalonMahasiswaService {
     }
     
     
-
     public List<CalonMahasiswaDTO> findAll() {
         List<CalonMahasiswa> calonMahasiswaList = calonMahasiswaRepository.findAll();
         return calonMahasiswaList.stream().map(this::convertToDTO).toList();
@@ -155,9 +154,6 @@ public class CalonMahasiswaService {
     public List<CalonMahasiswa> findAllWithJurusanDiterima() {
         return calonMahasiswaRepository.findAllWithJurusanDiterima();
     }
-
-
-
     public List<CalonMahasiswa> findAllWithFilters(Long jurusanId, String status, String nama) {
         List<CalonMahasiswa> mahasiswaList = calonMahasiswaRepository.findAll();
     
@@ -195,7 +191,4 @@ public class CalonMahasiswaService {
     }
 
 
-   
-
-    
 }

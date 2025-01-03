@@ -30,10 +30,11 @@
 
           <!-- Tombol Submit -->
           <button type="submit" class="w-full bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-blue-600 transition duration-200">Create</button>
-
-          <!-- Pesan Error Umum -->
-          <div th:if="${message}" class="text-red-500 text-sm text-center mt-4" th:text="${message}"></div>
         </form>
+        <!-- Pesan Error Umum -->
+        <div th:if="${message}" class="text-red-500 text-sm text-center mt-4" th:text="${message}"></div>
+        <!-- Pesan Sukses -->
+        <div th:if="${successMessage}" class="text-green-500 text-sm text-center mt-4" th:text="${successMessage}"></div>
 
         <!-- Tombol Kembali -->
         <div class="mt-4 text-center">

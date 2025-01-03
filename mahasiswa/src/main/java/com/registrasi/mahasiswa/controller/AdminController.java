@@ -45,21 +45,33 @@ public class AdminController {
     @Autowired
     private CalonMahasiswaService calonMahasiswaService;
 
+    // Helper method to check if the user is an admin 
+    private boolean isAdmin(HttpSession session) { 
+        User user = (User) session.getAttribute("user"); 
+        return user != null && "ADMIN".equals(user.getRole()); 
+    }
+
     // Menampilkan daftar jurusan
-    @GetMapping("/jurusan")
-    public String listJurusan(Model model) {
-        model.addAttribute("jurusanList", jurusanService.getAllJurusan());
-        return "admin/listJurusan";
+    @GetMapping("/jurusan") 
+    public String listJurusan(HttpSession session, Model model) { 
+        if (!isAdmin(session)) { 
+            return "redirect:/login"; 
+        } 
+        model.addAttribute("jurusanList", jurusanService.getAllJurusan()); return "admin/listJurusan"; 
     }
 
     // Menampilkan form untuk membuat jurusan baru
     @GetMapping("/jurusan/create")
-    public String createJurusanForm(Model model) {
+    public String createJurusanForm(HttpSession session, Model model) {
+        if (!isAdmin(session)){
+            return "redirect:/login";
+
+        }
         model.addAttribute("jurusan", new JurusanDTO());
         return "admin/createJurusan";
     }
 
-    // Menangani proses penyimpanan jurusan baru
+  // Menangani proses penyimpanan jurusan baru
     @PostMapping("/jurusan")
     public String createJurusan(
             @Valid @ModelAttribute JurusanDTO jurusanDTO, 
@@ -76,14 +88,16 @@ public class AdminController {
         }
         // Simpan jurusan jika tidak ada error
         jurusanService.saveJurusan(jurusanDTO);
+        model.addAttribute("successMessage", "Jurusan berhasil dibuat");
         return "redirect:/admin/jurusan";
     }
 
-    
-    
-    
+
     @GetMapping("/jurusan/update/{id}") 
-    public String updateJurusanForm(@PathVariable Long id, Model model) { 
+    public String updateJurusanForm(@PathVariable Long id, HttpSession session, Model model) { 
+    if (!isAdmin(session)) { 
+        return "redirect:/login"; 
+    }
     JurusanDTO jurusanDTO = jurusanService.getAllJurusan().stream().filter(j -> j.getId().equals(id)).findFirst().orElse(null); 
     model.addAttribute("jurusan", jurusanDTO); 
         return "admin/updateJurusan"; 
@@ -96,17 +110,21 @@ public class AdminController {
     }
 
     @GetMapping("/jurusan/delete/{id}")
-    public String deleteJurusan(@PathVariable Long id) {
+    public String deleteJurusan(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)){
+            return "redirect:/login";
+        }
         jurusanService.deleteJurusan(id);
         return "redirect:/admin/jurusan";
     }
     // jurusan end
 
-
-    
-    // mahasiswa end
+   
     @GetMapping("/hasilTes")
-    public String hasilTesForm(Model model) {
+    public String hasilTesForm(Model model, HttpSession session) {
+        if(!isAdmin(session)){
+            return "redirect:/login";
+        }
         model.addAttribute("hasilTes", new HasilTesDTO());
         return "admin/hasilTesForm";
     }
@@ -178,7 +196,7 @@ public class AdminController {
         } 
         model.addAttribute("user", user); 
         return "admin/profile"; 
-        }
+    }
 
     @PostMapping("/uploadProfilePicture")
     public String uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
@@ -214,7 +232,5 @@ public class AdminController {
         // Mengembalikan nama template
         return "admin/listMahasiswa"; // Sesuaikan dengan template HTML yang digunakan
     }
-
-
 
 }

@@ -43,8 +43,18 @@ public class CalonMahasiswaController {
     @Autowired
     private UserService userService;
 
+    // Helper method to check if the user is an admin 
+    private boolean isMahasiswa(HttpSession session) { 
+        User user = (User) session.getAttribute("user"); 
+        return user != null && "USER".equals(user.getRole()); 
+    }
+
+
     @GetMapping("/inputBiodata")
-    public String inputBiodataForm(Model model) {
+    public String inputBiodataForm(Model model, HttpSession session) {
+        if (!isMahasiswa(session)) { 
+            return "redirect:/login"; 
+        } 
         model.addAttribute("calonMahasiswa", new CalonMahasiswaDTO());
         model.addAttribute("jurusanList", jurusanService.getAllJurusan());
         return "calonMahasiswa/inputBiodata";
@@ -166,4 +176,6 @@ public class CalonMahasiswaController {
         model.addAttribute("message", "Anda telah berhasil logout.");
         return "calonMahasiswa/logout";
     }
+
+    
 }
